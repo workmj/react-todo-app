@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import TodoInput from './TodoInput';
+import TodoItem from './TodoItem';
 
 function App(){
 
 	const [todo, setTodo] = useState("");
 	const [todos, setTodos] = useState([]);
 
+	// 할일추가
 	const handleAddTodo = () => {
 		setTodos([
 			...todos, {
@@ -15,49 +18,61 @@ function App(){
 		setTodo("");
 	}
 
+	// 할일삭제
+	const handleDeleteTodo = (id) => {
+		setTodos(
+			todos.filter((item) => item.id !== id)
+		);
+	}
+
+	// 할일완료
+	const handleCompleteTodo = (id) => {
+		setTodos(
+			todos.map((item) => {
+				if(item.id === id){
+					return {
+						...item,
+						completed: !item.completed
+					}
+				}
+				return item;
+			})
+		)
+	}
+
+	// 할일수정
+	const handleModifyTodo = (id, text) => {
+		setTodos(
+			todos.map((item) => {
+				if(item.id === id){
+					return {
+						...item,
+						text: text
+					}
+				}
+				return item
+			})
+		)
+	}
+
 
 	return (
 		<>
 			<h1>REACT TODO APP</h1>
-			<input
-				type="text"
-				placeholder="할 일을 입력하세요"
-				value={todo}
-				onChange={(e) => setTodo(e.target.value)}
-				onKeyDown={(e) => {
-					if (e.key === "Enter") {
-						handleAddTodo();
-					}
-				}}
+			<TodoInput
+				todo={todo}
+				onChange={setTodo}
+				onAdd={handleAddTodo}
 			/>
-			<button onClick={handleAddTodo}>추가</button>
 			<ul className="todo-list">
 				{todos.map((todo) => (
-					<li key={todo.id} className={todo.completed ? "completed" : ""}>
-						<input
-							type="checkbox"
-							checked={todo.completed}
-							onChange={() => {
-								setTodos(
-									todos.map((item) => {
-										if( item.id === todo.id ){
-											return {
-												...item,
-												completed: !item.completed
-											}
-										}
-										return item;
-									})
-								);
-							}}
-						/>
-						<span>{todo.text}</span>
-						<button onClick={() => {
-							setTodos(
-								todos.filter((item) => item.id !== todo.id)
-							)
-						}}>삭제</button>
-					</li>
+					<TodoItem
+						key={todo.id}
+						todo={todo}
+						onDelete={handleDeleteTodo}
+						onComplete={handleCompleteTodo}
+						onModify={handleModifyTodo}
+					/>
 				))}
 			</ul>
 		</>
