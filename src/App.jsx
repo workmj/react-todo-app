@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TodoInput from './TodoInput';
 import TodoItem from './TodoItem';
 
@@ -6,6 +6,21 @@ function App(){
 
 	const [todo, setTodo] = useState("");
 	const [todos, setTodos] = useState([]);
+	const [isLoaded, setIsLoaded] = useState(false);
+
+	useEffect(() => {
+		const savedTodos = localStorage.getItem("todos");
+		if(savedTodos){
+			setTodos(JSON.parse(savedTodos));
+		}
+
+		setIsLoaded(true);
+	}, []);
+
+	useEffect(() => {
+		if(!isLoaded) return;
+		localStorage.setItem("todos", JSON.stringify(todos));
+	}, [todos, isLoaded]);
 
 	// 할일추가
 	const handleAddTodo = () => {
