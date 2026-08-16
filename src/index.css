@@ -109,3 +109,8 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+
+
+.todo-list {list-style: none;}
+.todo-list li.completed span {text-decoration: line-through;}
