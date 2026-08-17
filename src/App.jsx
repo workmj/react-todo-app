@@ -8,6 +8,7 @@ function App(){
 	const [todos, setTodos] = useState([]);
 	const [isLoaded, setIsLoaded] = useState(false);
 
+	// 로컬스토리지 불러오기
 	useEffect(() => {
 		const savedTodos = localStorage.getItem("todos");
 		if(savedTodos){
@@ -17,6 +18,7 @@ function App(){
 		setIsLoaded(true);
 	}, []);
 
+	// 로컬스토리지 저장
 	useEffect(() => {
 		if(!isLoaded) return;
 		localStorage.setItem("todos", JSON.stringify(todos));
