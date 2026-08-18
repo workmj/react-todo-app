@@ -1,58 +1,39 @@
-import { useState, useRef } from 'react';
-import useTodos from "./useTodos"
-import TodoItem from './TodoItem';
+import { useEffect, useState } from "react";
+import usePosts from './usePosts';
 
-function App(){
-
-	const [todo, setTodo] = useState("");
+function App() {
 
 	const {
-		todos,
-		addTodo,
-		deleteTodo,
-		completeTodo,
-		modifyTodo
-	} = useTodos();
+		posts,
+		loading,
+		error
+	} = usePosts();
 
-	const handleAddTodo = () => {
-		if(!todo.trim()) return;
-
-        inputRef.current.focus();
-		addTodo(todo);
-		setTodo("");
+	if(loading){
+		return <p>불러오는 중...</p>
 	}
 
-    const inputRef = useRef(null);
+	if(error){
+		return <p>{error}</p>
+	}
+
+	if(posts.length === 0){
+		return <p>게시글이 없습니다.</p>
+	}
 
 	return (
 		<>
-			<h1>REACT TODO APP</h1>
-			<input
-				type="text"
-				placeholder="할 일을 입력하세요."
-                ref={inputRef}
-				value={todo}
-				onChange={(e) => setTodo(e.target.value)}
-				onKeyDown={(e) => {
-					if(e.key === "Enter"){
-						handleAddTodo();
-					}
-				}}
-			/>
-			<button onClick={handleAddTodo}>추가</button>
-			<ul className="todo-list">
-				{todos.map((todo) => (
-					<TodoItem
-						key={todo.id}
-						todo={todo}
-						onDelete={deleteTodo}
-						onComplete={completeTodo}
-						onModify={modifyTodo}
-					/>
+			<h1>게시글 목록</h1>
+
+			<ul>
+				{posts.map((post) => (
+					<li key={post.id}>
+					{post.title}
+					</li>
 				))}
 			</ul>
 		</>
-	)
+	);
 }
 
 export default App;
