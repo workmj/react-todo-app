@@ -2,16 +2,12 @@ import { useState, useEffect } from 'react';
 
 function useTodos(){
 	
-	const [todos, setTodos] = useState([]);
-
-	// 처음 LocalStorage에서 불러오기
-	useEffect(() => {
+	const [todos, setTodos] = useState(() => {
+		// 처음 LocalStorage에서 불러오기
 		const savedTodos = localStorage.getItem("todos");
 
-		if(savedTodos) {
-			setTodos(JSON.parse(savedTodos));
-		}
-	}, []);
+		return savedTodos ? JSON.parse(savedTodos) : [];
+	});
 
 	// todos가 변경되면 저장
 	useEffect(() => {
